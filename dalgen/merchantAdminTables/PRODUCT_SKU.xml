@@ -1,0 +1,158 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="PRODUCT_SKU" physicalName="PRODUCT_SKU" remark="PRODUCT_SKU">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:PRODUCT_SKU">
+        <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO PRODUCT_SKU(
+
+        UNIT
+        ,PRICE
+        ,STOCK
+        ,SHOP_ID
+        ,USER_ID
+        ,BAR_CODE
+        ,DELETED
+        ,FEATURE
+        ,OPT_USER
+        ,SKU_CODE
+        ,ITEM_CODE
+        ,GMT_CREATE
+        ,GMT_MODIFIED
+        ,SPECIFICATION
+        )VALUES(
+
+        #{unit,jdbcType=VARCHAR}
+        ,#{price,jdbcType=BIGINT}
+        ,#{stock,jdbcType=INTEGER}
+        ,#{shopId,jdbcType=VARCHAR}
+        ,#{userId,jdbcType=VARCHAR}
+        ,#{barCode,jdbcType=VARCHAR}
+        ,#{deleted,jdbcType=BIT}
+        ,#{feature,jdbcType=VARCHAR}
+        ,#{optUser,jdbcType=VARCHAR}
+        ,#{skuCode,jdbcType=VARCHAR}
+        ,#{itemCode,jdbcType=VARCHAR}
+        ,now()
+        ,now()
+        ,#{specification,jdbcType=VARCHAR}
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:PRODUCT_SKU">
+        UPDATE PRODUCT_SKU
+        SET
+        UNIT = #{unit,jdbcType=VARCHAR}
+        ,PRICE = #{price,jdbcType=BIGINT}
+        ,STOCK = #{stock,jdbcType=INTEGER}
+        ,SHOP_ID = #{shopId,jdbcType=VARCHAR}
+        ,USER_ID = #{userId,jdbcType=VARCHAR}
+        ,BAR_CODE = #{barCode,jdbcType=VARCHAR}
+        ,DELETED = #{deleted,jdbcType=BIT}
+        ,FEATURE = #{feature,jdbcType=VARCHAR}
+        ,OPT_USER = #{optUser,jdbcType=VARCHAR}
+        ,SKU_CODE = #{skuCode,jdbcType=VARCHAR}
+        ,ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        ,SPECIFICATION = #{specification,jdbcType=VARCHAR}
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="updateBaseInfo" paramtype="object" remark="更新表:PRODUCT_SKU">
+        UPDATE PRODUCT_SKU
+        SET
+        UNIT = #{unit,jdbcType=VARCHAR}
+        ,FEATURE = #{feature,jdbcType=VARCHAR}
+        ,OPT_USER = #{optUser,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        ,SPECIFICATION = #{specification,jdbcType=VARCHAR}
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:PRODUCT_SKU">
+        DELETE FROM PRODUCT_SKU
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:PRODUCT_SKU">
+        SELECT * FROM PRODUCT_SKU
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByIdList" multiplicity="many" remark="根据主键列表获取数据:PRODUCT_SKU">
+        SELECT * FROM PRODUCT_SKU
+        WHERE
+        ID in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </operation>
+
+    <operation name="updatePriceBySkuCode" multiplicity="one" remark="根据sku信息修改sku价格">
+        UPDATE PRODUCT_SKU
+        SET
+        PRICE = #{price,jdbcType=BIGINT}
+        ,OPT_USER = #{optUser,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        WHERE
+        SKU_CODE = #{skuCode,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="updateStockBySkuCode" multiplicity="one" remark="根据sku更新库存信息">
+        UPDATE PRODUCT_SKU
+        SET
+        STOCK = STOCK + #{stock,jdbcType=BIGINT}
+        ,OPT_USER = #{optUser,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        WHERE
+        SKU_CODE = #{skuCode,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="updateStockZeroBySkuCode" multiplicity="one" remark="根据sku清空库存信息">
+        UPDATE PRODUCT_SKU
+        SET
+        STOCK = 0
+        ,OPT_USER = #{optUser,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        WHERE
+        SKU_CODE = #{skuCode,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="querySkuByCode" multiplicity="one" remark="根据skuCode查询sku信息">
+        SELECT * FROM PRODUCT_SKU
+        WHERE
+        SKU_CODE = #{skuCode,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="querySkuByBarCode" multiplicity="one" remark="根据barCode查询sku信息">
+        SELECT * FROM PRODUCT_SKU
+        WHERE
+        SHOP_ID = #{shopId,jdbcType=VARCHAR}
+        AND BAR_CODE = #{barCode,jdbcType=VARCHAR}
+
+    </operation>
+
+    <operation name="querySkuByBarCodeList" multiplicity="many" remark="根据barCode批量查询sku信息">
+        SELECT * FROM PRODUCT_SKU
+        WHERE
+        SHOP_ID = #{shopId,jdbcType=VARCHAR}
+        AND BAR_CODE in
+        <foreach collection="barCodeList" item="barCode" open="(" separator="," close=")">
+            #{barCode,jdbcType=VARCHAR}
+        </foreach>
+
+    </operation>
+
+    <operation name="querySkuByItemCode" multiplicity="many" remark="根据itemCode查询下面的所有sku">
+        SELECT * FROM PRODUCT_SKU
+        WHERE
+        ITEM_CODE = #{itemCode,jdbcType=VARCHAR}
+    </operation>
+</table>

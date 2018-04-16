@@ -1,0 +1,205 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="PRODUCT_TEMPLATE" physicalName="PRODUCT_TEMPLATE" remark="PRODUCT_TEMPLATE">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:PRODUCT_TEMPLATE">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO PRODUCT_TEMPLATE(
+
+        UNIT
+        ,TITLE
+        ,USER_ID
+        ,BAR_CODE
+        ,DELETED
+        ,FEATURE
+        ,OPT_USER
+        ,IMAGE_URL
+        ,BRAND_CODE
+        ,GMT_CREATE
+        ,EFFECTIVED
+        ,DESCRIPTION
+        ,GMT_MODIFIED
+        ,PRODUCT_NAME
+        ,CATEGORY_CODE
+        ,SPECIFICATION
+        ,MERCHANT_ID
+        )VALUES(
+
+        #{unit,jdbcType=VARCHAR}
+        ,#{title,jdbcType=VARCHAR}
+        ,#{userId,jdbcType=VARCHAR}
+        ,#{barCode,jdbcType=VARCHAR}
+        ,0
+        ,#{feature,jdbcType=VARCHAR}
+        ,#{optUser,jdbcType=VARCHAR}
+        ,#{imageUrl,jdbcType=VARCHAR}
+        ,#{brandCode,jdbcType=VARCHAR}
+        ,now()
+        ,1
+        ,#{description,jdbcType=LONGVARCHAR}
+        ,now()
+        ,#{productName,jdbcType=VARCHAR}
+        ,#{categoryCode,jdbcType=VARCHAR}
+        ,#{specification,jdbcType=VARCHAR}
+        ,#{merchantId,jdbcType=BIGINT}
+        )
+    </operation>
+    <operation name="updatePartly" paramtype="object" remark="更新表:PRODUCT_TEMPLATE" >
+        UPDATE PRODUCT_TEMPLATE
+        SET
+        GMT_MODIFIED    = now()
+        <if test="unit != null">
+            ,  UNIT            = #{unit,jdbcType=VARCHAR}
+        </if>
+        <if test="title != null">
+            ,TITLE           = #{title,jdbcType=VARCHAR}
+        </if>
+        <if test="userId != null">
+            ,USER_ID         = #{userId,jdbcType=VARCHAR}
+        </if>
+        <if test="deleted != null">
+            ,DELETED         = #{deleted,jdbcType=BIT}
+        </if>
+        <if test="feature != null">
+            ,FEATURE         = #{feature,jdbcType=VARCHAR}
+        </if>
+        <if test="optUser != null">
+            ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+        </if>
+        <if test="imageUrl != null">
+            ,IMAGE_URL       = #{imageUrl,jdbcType=VARCHAR}
+        </if>
+        <if test="brandCode != null">
+            ,BRAND_CODE      = #{brandCode,jdbcType=VARCHAR}
+        </if>
+        <if test="effectived != null">
+            ,EFFECTIVED      = #{effectived,jdbcType=TINYINT}
+        </if>
+        <if test="description != null">
+            ,DESCRIPTION     = #{description,jdbcType=LONGVARCHAR}
+        </if>
+
+        <if test="productName != null">
+            ,PRODUCT_NAME    = #{productName,jdbcType=VARCHAR}
+        </if>
+        <if test="categoryCode != null">
+            ,CATEGORY_CODE   = #{categoryCode,jdbcType=VARCHAR}
+        </if>
+        <if test="specification != null">
+            ,SPECIFICATION   = #{specification,jdbcType=VARCHAR}
+        </if>
+        WHERE
+        ID              = #{id,jdbcType=INTEGER}
+    </operation>
+
+
+    <operation name="updateImage"  remark="更新表图片:PRODUCT_TEMPLATE" >
+        UPDATE PRODUCT_TEMPLATE
+        SET
+        GMT_MODIFIED    = now(),
+        IMAGE_URL       = #{imageUrl,jdbcType=VARCHAR}
+        WHERE
+        bar_code              = #{barCode,jdbcType=VARCHAR}
+        and MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:PRODUCT_TEMPLATE">
+        UPDATE PRODUCT_TEMPLATE
+        SET
+        UNIT            = #{unit,jdbcType=VARCHAR}
+        ,TITLE           = #{title,jdbcType=VARCHAR}
+        ,USER_ID         = #{userId,jdbcType=VARCHAR}
+        ,BAR_CODE        = #{barCode,jdbcType=VARCHAR}
+        ,DELETED         = #{deleted,jdbcType=BIT}
+        ,FEATURE         = #{feature,jdbcType=VARCHAR}
+        ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+        ,IMAGE_URL       = #{imageUrl,jdbcType=VARCHAR}
+        ,BRAND_CODE      = #{brandCode,jdbcType=VARCHAR}
+        ,EFFECTIVED      = #{effectived,jdbcType=TINYINT}
+        ,DESCRIPTION     = #{description,jdbcType=LONGVARCHAR}
+        ,GMT_MODIFIED    = now()
+        ,PRODUCT_NAME    = #{productName,jdbcType=VARCHAR}
+        ,CATEGORY_CODE   = #{categoryCode,jdbcType=VARCHAR}
+        ,SPECIFICATION   = #{specification,jdbcType=VARCHAR}
+        WHERE
+        ID              = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:PRODUCT_TEMPLATE">
+        DELETE FROM PRODUCT_TEMPLATE
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:PRODUCT_TEMPLATE">
+        SELECT * FROM PRODUCT_TEMPLATE
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+        AND DELETED = 0
+    </operation>
+
+    <operation name="getListByParam" multiplicity="many" remark="根据参数查询数据：PRODUCT_TEMPLATE">
+        SELECT * FROM PRODUCT_TEMPLATE
+        WHERE DELETED = 0
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        <if test="productName != null">
+            AND PRODUCT_NAME LIKE CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="barCode != null">
+            AND BAR_CODE LIKE CONCAT('%',#{barCode,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="categoryCodeList.size() >0">
+            AND CATEGORY_CODE IN
+            <foreach collection="categoryCodeList" item="categoryCode" separator="," close=")" open="(">
+                #{categoryCode,jdbcType=VARCHAR}
+            </foreach>
+
+        </if>
+        ORDER BY GMT_CREATE DESC
+    </operation>
+
+    <operation name="getListByBarCode" multiplicity="many" remark="根据barCode查询数据：PRODUCT_TEMPLATE">
+        SELECT * FROM PRODUCT_TEMPLATE
+        WHERE DELETED = 0
+        AND BAR_CODE = #{barCode,jdbcType=VARCHAR}
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        ORDER BY GMT_CREATE DESC
+    </operation>
+
+    <operation name="countByCategory" multiplicity="many" remark="根据categoryCode查询数量" resultmap="CategoryResultMap">
+        SELECT CATEGORY_CODE as categoryCode, COUNT(ID) as count FROM PRODUCT_TEMPLATE
+        WHERE DELETED = 0
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        <if test="productName != null">
+            AND PRODUCT_NAME LIKE CONCAT('%',#{productName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="barCode != null">
+            AND BAR_CODE LIKE CONCAT('%',#{barCode,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="categoryCodeList != null and categoryCodeList.size() >0">
+            AND CATEGORY_CODE IN
+            <foreach collection="categoryCodeList" item="categoryCode" separator="," close=")" open="(">
+                #{categoryCode,jdbcType=VARCHAR}
+            </foreach>
+
+        </if>
+        GROUP BY CATEGORY_CODE
+    </operation>
+
+    <operation name="getExactByBarCode" multiplicity="one" remark="根据barCode精确查询数据：PRODUCT_TEMPLATE">
+        SELECT * FROM PRODUCT_TEMPLATE
+        WHERE BAR_CODE = #{barCode,jdbcType=VARCHAR}
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        AND DELETED = 0
+    </operation>
+
+    <resultmap name="CategoryResultMap" type="CategoryCountDO">
+        <column name="category_code" javatype="String" jdbctype="VARCHAR" remark="类目code"></column>
+        <column name="count" javatype="Long" jdbctype="BIGINT" remark="数量"></column>
+    </resultmap>
+
+
+</table>

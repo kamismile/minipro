@@ -1,0 +1,61 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="MERCHANT_PAY_ACCOUNT" physicalName="MERCHANT_PAY_ACCOUNT" remark="MERCHANT_PAY_ACCOUNT">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:MERCHANT_PAY_ACCOUNT">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO MERCHANT_PAY_ACCOUNT(
+
+        MCH_ID
+        ,GMT_CREATE
+        ,SECRET_KEY
+        ,MERCHANT_ID
+        ,GMT_MODIFIED
+        )VALUES(
+
+        #{mchId,jdbcType=VARCHAR}
+        ,now()
+        ,#{secretKey,jdbcType=VARCHAR}
+        ,#{merchantId,jdbcType=BIGINT}
+        ,now()
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:MERCHANT_PAY_ACCOUNT">
+        UPDATE MERCHANT_PAY_ACCOUNT
+        SET
+        MCH_ID = #{mchId,jdbcType=VARCHAR}
+        ,SECRET_KEY = #{secretKey,jdbcType=VARCHAR}
+        ,MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        ,GMT_MODIFIED = now()
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:MERCHANT_PAY_ACCOUNT">
+        DELETE FROM MERCHANT_PAY_ACCOUNT
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:MERCHANT_PAY_ACCOUNT">
+        SELECT * FROM MERCHANT_PAY_ACCOUNT
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByMerchantId" multiplicity="one" remark="根据merchantId获取数据:MERCHANT_PAY_ACCOUNT">
+        SELECT * FROM MERCHANT_PAY_ACCOUNT
+        WHERE
+        MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByMchId" multiplicity="one" remark="根据mchId获取数据:MERCHANT_PAY_ACCOUNT">
+        SELECT * FROM MERCHANT_PAY_ACCOUNT
+        WHERE
+        MCH_ID = #{mchId,jdbcType=BIGINT}
+    </operation>
+</table>

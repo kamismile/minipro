@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_HOME" value="${HOME}/merchant-admin/logs"/>
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!--覆盖spring-boot的按固定大小文件生成-->
+    <!-- 按照每天生成日志文件 -->
+    <!-- 通用日志 -->
+    <appender name="dailyFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/common.30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/common.30dt.log.%d{yyyy.MM.dd}-%i</FileNamePattern>
+            <MaxFileSize>100MB</MaxFileSize>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--SERVICE-DIGEST 耗时等简要信息-->
+    <appender name="serviceDigestFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/service-digest.30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/service-digest.30dt.log.%d{yyyy.MM.dd}-%i</FileNamePattern>
+            <MaxFileSize>100MB</MaxFileSize>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--SERVICE-DEFAULT 服务调用日志-->
+    <appender name="serviceDefaultFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/service-default.30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/service-default.30dt.log.%d{yyyy.MM.dd}-%i</FileNamePattern>
+            <MaxFileSize>100MB</MaxFileSize>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--INTEGRATION-DIGEST 外部服务耗时等简要信息-->
+    <appender name="integrationDigestFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/integration-digest.30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/integration-digest.30dt.log.%d{yyyy.MM.dd}-%i</FileNamePattern>
+            <MaxFileSize>100MB</MaxFileSize>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--INTEGRATION-DEFAULT 外部服务调用日志-->
+    <appender name="integrationDefaultFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/integration-default.30dt.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/integration-default.30dt.log.%d{yyyy.MM.dd}-%i</FileNamePattern>
+            <MaxFileSize>100MB</MaxFileSize>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>-->
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="SERVICE-DIGEST" additivity="false" level="INFO">
+        <appender-ref ref="serviceDigestFile"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="SERVICE-DEFAULT" additivity="false" level="INFO">
+        <appender-ref ref="serviceDefaultFile"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="INTEGRATION-DIGEST" additivity="false" level="INFO">
+        <appender-ref ref="integrationDigestFile"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <logger name="INTEGRATION-DEFAULT" additivity="false" level="INFO">
+        <appender-ref ref="integrationDefaultFile"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- 日志输出级别 -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="dailyFile"/>
+    </root>
+</configuration>

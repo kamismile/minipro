@@ -1,0 +1,60 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="REGION" physicalName="REGION" remark="REGION">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:REGION">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO REGION(
+
+        LEVEL
+        ,PARENT_ID
+        ,REGION_CODE
+        ,REGION_NAME
+        ,REGION_NAME_EN
+        )VALUES(
+
+        #{level,jdbcType=TINYINT}
+        ,#{parentId,jdbcType=BIGINT}
+        ,#{regionCode,jdbcType=VARCHAR}
+        ,#{regionName,jdbcType=VARCHAR}
+        ,#{regionNameEn,jdbcType=VARCHAR}
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:REGION">
+        UPDATE REGION
+        SET
+        LEVEL = #{level,jdbcType=TINYINT}
+        ,PARENT_ID = #{parentId,jdbcType=BIGINT}
+        ,REGION_CODE = #{regionCode,jdbcType=VARCHAR}
+        ,REGION_NAME = #{regionName,jdbcType=VARCHAR}
+        ,REGION_NAME_EN = #{regionNameEn,jdbcType=VARCHAR}
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:REGION">
+        DELETE FROM REGION
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:REGION">
+        SELECT * FROM REGION
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getChildren" multiplicity="many" remark="根据下级区域获取数据:REGION">
+        SELECT * FROM REGION
+        WHERE
+        PARENT_ID = #{parentId,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getAll" multiplicity="many" remark="获取所有区域:REGION">
+        SELECT * FROM REGION
+    </operation>
+</table>

@@ -1,0 +1,38 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="SEQUENCE" physicalName="SEQUENCE" remark="SEQUENCE">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:SEQUENCE">
+            <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+                SELECT
+                LAST_INSERT_ID()
+            </selectKey>
+        INSERT INTO SEQUENCE(
+            
+            STEP
+            ,SEQ_NAME
+            ,CREATE_TIME
+            ,CURRENT_VALUE
+        )VALUES(
+            
+            #{step,jdbcType=INTEGER}
+            ,#{seqName,jdbcType=VARCHAR}
+            ,now()
+            ,#{currentValue,jdbcType=INTEGER}
+        )
+    </operation>
+
+    <operation name="updateSequenceValue" remark="更新sequence值:SEQUENCE">
+        UPDATE SEQUENCE
+        SET
+        CURRENT_VALUE = #{currentValue,jdbcType=INTEGER}
+        WHERE
+        SEQ_NAME = #{seqName,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="getBySeqNameForUpdate" remark="根据序列标识符获取数据:SEQUENCE">
+        SELECT CURRENT_VALUE,STEP FROM SEQUENCE
+        WHERE
+        SEQ_NAME = #{seqName,jdbcType=VARCHAR} for update
+    </operation>
+</table>

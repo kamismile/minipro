@@ -1,0 +1,113 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="CATEGORY" physicalName="CATEGORY" remark="CATEGORY">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:CATEGORY">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO CATEGORY(
+
+        NAME
+        ,LEVEL
+        ,ID_CHAIN
+        ,OPT_USER
+        ,GMT_CREATE
+        ,PARENT_CODE
+        ,DESCRIPTION
+        ,GMT_MODIFIED
+        ,CATEGORY_CODE
+        ,DELETED
+        ,MERCHANT_ID
+        )VALUES(
+
+        #{name,jdbcType=VARCHAR}
+        ,#{level,jdbcType=INTEGER}
+        ,#{idChain,jdbcType=VARCHAR}
+        ,#{optUser,jdbcType=VARCHAR}
+        ,now()
+        ,#{parentCode,jdbcType=VARCHAR}
+        ,#{description,jdbcType=VARCHAR}
+        ,now()
+        ,#{categoryCode,jdbcType=VARCHAR}
+        ,0
+        ,#{merchantId,jdbcType=BIGINT}
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:CATEGORY">
+        UPDATE CATEGORY
+        SET
+        NAME = #{name,jdbcType=VARCHAR}
+        ,LEVEL = #{level,jdbcType=INTEGER}
+        ,DELETED = #{deleted,jdbcType=BIT}
+        ,ID_CHAIN = #{idChain,jdbcType=VARCHAR}
+        ,OPT_USER = #{optUser,jdbcType=VARCHAR}
+        ,PARENT_CODE = #{parentCode,jdbcType=VARCHAR}
+        ,DESCRIPTION = #{description,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        ,CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR}
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:CATEGORY">
+        DELETE FROM CATEGORY
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getByCategoryCode" multiplicity="one" remark="根据categoyCode获取数据:CATEGORY">
+        SELECT * FROM CATEGORY
+        WHERE
+        CATEGORY_CODE = #{categoryCode,jdbcType=INTEGER}
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+    </operation>
+
+
+
+    <operation name="list" multiplicity="many" remark="获取列表" >
+        SELECT * FROM CATEGORY
+        where MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+            <if test="level != null">
+                AND LEVEL >= #{level,jdbcType=INTEGER}
+            </if>
+
+    </operation>
+
+    <operation name="getByCategoryCodeList" multiplicity="many" remark="根据code列表获取列表" >
+        SELECT * FROM CATEGORY
+        WHERE
+        MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        AND CATEGORY_CODE IN
+        <foreach collection="list" item="categoryCode" open="(" close=")" separator=",">
+            #{categoryCode}
+        </foreach>
+    </operation>
+
+    <operation name="getMaxLevelCategoryByCode" multiplicity="many" remark="根据code获取最后一级code列表">
+        SELECT * FROM CATEGORY
+        WHERE ID_CHAIN LIKE CONCAT('%',#{categoryCode,jdbcType=VARCHAR},'%')
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+        AND LEVEL = #{level,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getChildCategoryByCode" multiplicity="many" remark="根据code获取最后一级code列表">
+        SELECT * FROM CATEGORY
+        WHERE ID_CHAIN LIKE CONCAT('%',#{categoryCode,jdbcType=VARCHAR},'%')
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+       <![CDATA[
+            AND LEVEL <= #{level,jdbcType=INTEGER}
+       ]]>
+
+    </operation>
+
+    <operation name="getByName" multiplicity="one" remark="根据categoyCode获取数据:CATEGORY">
+        SELECT * FROM CATEGORY
+        WHERE
+        NAME = #{name,jdbcType=INTEGER}
+        AND LEVEL = #{level,jdbcType=INTEGER}
+        AND MERCHANT_ID = #{merchantId,jdbcType=BIGINT}
+    </operation>
+</table>

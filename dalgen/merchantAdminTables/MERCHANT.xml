@@ -1,0 +1,58 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="MERCHANT" physicalName="MERCHANT" remark="MERCHANT">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:MERCHANT">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO MERCHANT(
+
+        USER_ID
+        ,CONTACT
+        ,GMT_CREATE
+        ,GMT_MODIFIED
+        ,MERCHANT_NAME
+        ,CONTACT_MOBILE
+        )VALUES(
+
+        #{userId,jdbcType=VARCHAR}
+        ,#{contact,jdbcType=VARCHAR}
+        ,now()
+        ,now()
+        ,#{merchantName,jdbcType=VARCHAR}
+        ,#{contactMobile,jdbcType=VARCHAR}
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:MERCHANT">
+        UPDATE MERCHANT
+        SET
+        USER_ID = #{userId,jdbcType=VARCHAR}
+        ,CONTACT = #{contact,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        ,MERCHANT_NAME = #{merchantName,jdbcType=VARCHAR}
+        ,CONTACT_MOBILE = #{contactMobile,jdbcType=VARCHAR}
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:MERCHANT">
+        DELETE FROM MERCHANT
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:MERCHANT">
+        SELECT * FROM MERCHANT
+        WHERE
+        ID = #{id,jdbcType=BIGINT}
+    </operation>
+
+    <operation name="getByUserId" multiplicity="one" remark="根据userId获取数据:MERCHANT">
+        SELECT * FROM MERCHANT
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR} LIMIT 1
+    </operation>
+</table>

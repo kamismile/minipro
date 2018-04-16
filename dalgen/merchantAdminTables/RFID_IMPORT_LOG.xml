@@ -1,0 +1,56 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="RFID_IMPORT_LOG" physicalName="RFID_IMPORT_LOG" remark="RFID_IMPORT_LOG">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:RFID_IMPORT_LOG">
+            <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+                SELECT
+                LAST_INSERT_ID()
+            </selectKey>
+        INSERT INTO RFID_IMPORT_LOG(
+            
+            LOG_URL
+            ,SHOP_ID
+            ,USER_ID
+            ,GMT_CREATE
+        )VALUES(
+            
+            #{logUrl,jdbcType=VARCHAR}
+            ,#{shopId,jdbcType=VARCHAR}
+            ,#{userId,jdbcType=VARCHAR}
+            ,now()
+        )
+    </operation>
+
+        <operation name="update" paramtype="object" remark="更新表:RFID_IMPORT_LOG">
+            UPDATE RFID_IMPORT_LOG
+            SET
+                    LOG_URL         = #{logUrl,jdbcType=VARCHAR}
+                    ,SHOP_ID         = #{shopId,jdbcType=VARCHAR}
+                    ,USER_ID         = #{userId,jdbcType=VARCHAR}
+            WHERE
+                ID              = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:RFID_IMPORT_LOG">
+            DELETE FROM RFID_IMPORT_LOG
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:RFID_IMPORT_LOG">
+            SELECT * FROM RFID_IMPORT_LOG
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="getLastLog" multiplicity="one" remark="获取最后一条记录:RFID_IMPORT_LOG">
+            SELECT * FROM RFID_IMPORT_LOG
+            WHERE
+            USER_ID = #{userId,jdbcType=VARCHAR}
+            AND SHOP_ID = #{shopId,jdbcType=VARCHAR}
+            ORDER BY GMT_CREATE DESC
+            LIMIT 1
+        </operation>
+
+</table>

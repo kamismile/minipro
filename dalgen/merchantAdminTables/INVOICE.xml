@@ -1,0 +1,112 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="INVOICE" physicalName="INVOICE" remark="INVOICE">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:INVOICE">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO INVOICE(
+
+        HEAD
+        ,EMAIL
+        ,AMOUNT
+        ,MOBILE
+        ,ORDER_NO
+        ,HEAD_TYPE
+        ,APPLY_TIME
+        ,GMT_CREATE
+        ,INVOICE_CODE
+        ,ORDER_TYPE
+        ,STORE_CODE
+        ,TAXPAYER_ID
+        ,GMT_MODIFIED
+        ,INVOICE_STATUS
+        ,USER_ID
+        )VALUES(
+
+        #{head,jdbcType=VARCHAR}
+        ,#{email,jdbcType=VARCHAR}
+        ,#{amount,jdbcType=INTEGER}
+        ,#{mobile,jdbcType=VARCHAR}
+        ,#{orderNo,jdbcType=VARCHAR}
+        ,#{headType,jdbcType=TINYINT}
+        ,now()
+        ,now()
+        ,#{invoiceCode,jdbcType=VARCHAR}
+        ,#{orderType,jdbcType=TINYINT}
+        ,#{storeCode,jdbcType=VARCHAR}
+        ,#{taxpayerId,jdbcType=VARCHAR}
+        ,now()
+        ,0
+        ,#{userId,jdbcType=VARCHAR}
+        )
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:INVOICE">
+        UPDATE INVOICE
+        SET
+        HEAD = #{head,jdbcType=VARCHAR}
+        ,EMAIL = #{email,jdbcType=VARCHAR}
+        ,AMOUNT = #{amount,jdbcType=INTEGER}
+        ,MOBILE = #{mobile,jdbcType=VARCHAR}
+        ,ORDER_NO = #{orderNo,jdbcType=VARCHAR}
+        ,HEAD_TYPE = #{headType,jdbcType=TINYINT}
+        ,APPLY_TIME = #{applyTime,jdbcType=TIMESTAMP}
+        ,INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
+        ,ORDER_TYPE = #{orderType,jdbcType=TINYINT}
+        ,STORE_CODE = #{storeCode,jdbcType=VARCHAR}
+        ,TAXPAYER_ID = #{taxpayerId,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        ,INVOICE_STATUS = #{invoiceStatus,jdbcType=TINYINT}
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:INVOICE">
+        DELETE FROM INVOICE
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:INVOICE">
+        SELECT * FROM INVOICE
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getByInvoiceCode" multiplicity="one" remark="根据invoiceCode获取数据:INVOICE">
+        SELECT * FROM INVOICE
+        WHERE
+        INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="updateInvoiceStatus" remark="更新表:INVOICE">
+        UPDATE INVOICE
+        SET
+        INVOICE_STATUS = #{invoiceStatus,jdbcType=TINYINT},
+        GMT_MODIFIED = now()
+        WHERE
+        INVOICE_CODE IN
+        <foreach collection="invoiceCodes" item="invoiceCode" index="index" open="(" close=")" separator=",">
+            #{invoiceCode,jdbcType=VARCHAR}
+        </foreach>
+    </operation>
+
+    <operation name="getByInvoiceCodes" multiplicity="many" remark="根据invoiceCode获取数据:INVOICE">
+        SELECT * FROM INVOICE
+        WHERE
+        INVOICE_CODE IN
+        <foreach collection="invoiceCodes" item="invoiceCode" index="index" open="(" close=")" separator=",">
+            #{invoiceCode,jdbcType=VARCHAR}
+        </foreach>
+    </operation>
+
+    <operation name="getLastInvoiceByUserId" multiplicity="one" remark="根据invoiceCode获取数据:INVOICE">
+        SELECT * FROM INVOICE
+        WHERE
+        USER_ID = #{userId,jdbcType=VARCHAR}
+        ORDER BY ID DESC LIMIT 1
+    </operation>
+</table>

@@ -1,0 +1,70 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="INVOICE_ITEM" physicalName="INVOICE_ITEM" remark="INVOICE_ITEM">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:INVOICE_ITEM">
+            <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+                SELECT
+                LAST_INSERT_ID()
+            </selectKey>
+        INSERT INTO INVOICE_ITEM(
+            
+            COUNT
+            ,PRICE
+            ,AMOUNT
+            ,BARCODE
+            ,ITEM_NAME
+            ,GMT_CREATE
+            ,GMT_MODIFIED
+            ,INVOICE_CODE
+            ,SPECIFICATION
+            ,INVOICE_ITEM_CODE
+        )VALUES(
+            
+            #{count,jdbcType=INTEGER}
+            ,#{price,jdbcType=INTEGER}
+            ,#{amount,jdbcType=INTEGER}
+            ,#{barcode,jdbcType=VARCHAR}
+            ,#{itemName,jdbcType=VARCHAR}
+            ,now()
+            ,now()
+            ,#{invoiceCode,jdbcType=VARCHAR}
+            ,#{specification,jdbcType=VARCHAR}
+            ,#{invoiceItemCode,jdbcType=VARCHAR}
+        )
+    </operation>
+
+        <operation name="update" paramtype="object" remark="更新表:INVOICE_ITEM">
+            UPDATE INVOICE_ITEM
+            SET
+                    COUNT           = #{count,jdbcType=INTEGER}
+                    ,PRICE           = #{price,jdbcType=INTEGER}
+                    ,AMOUNT          = #{amount,jdbcType=INTEGER}
+                    ,BARCODE         = #{barcode,jdbcType=VARCHAR}
+                    ,ITEM_NAME       = #{itemName,jdbcType=VARCHAR}
+                    ,GMT_MODIFIED    = now()
+                    ,INVOICE_CODE    = #{invoiceCode,jdbcType=VARCHAR}
+                    ,SPECIFICATION   = #{specification,jdbcType=VARCHAR}
+                    ,INVOICE_ITEM_CODE = #{invoiceItemCode,jdbcType=VARCHAR}
+            WHERE
+                ID              = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:INVOICE_ITEM">
+            DELETE FROM INVOICE_ITEM
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:INVOICE_ITEM">
+            SELECT * FROM INVOICE_ITEM
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+    <operation name="getByInvoiceCode" multiplicity="many" remark="根据主键获取数据:INVOICE_ITEM">
+        SELECT * FROM INVOICE_ITEM
+        WHERE
+        INVOICE_CODE = #{invoiceCode,jdbcType=VARCHAR}
+    </operation>
+</table>

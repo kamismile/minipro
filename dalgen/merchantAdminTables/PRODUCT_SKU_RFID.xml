@@ -1,0 +1,176 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="PRODUCT_SKU_RFID" physicalName="PRODUCT_SKU_RFID" remark="PRODUCT_SKU_RFID">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+        <operation name="insert" paramtype="object" remark="插入表:PRODUCT_SKU_RFID">
+                <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+                    SELECT
+                    LAST_INSERT_ID()
+                </selectKey>
+            INSERT INTO PRODUCT_SKU_RFID(
+                 RFID
+                ,STATUS
+                ,DELETED
+                ,OPT_USER
+                ,SKU_CODE
+                ,ITEM_CODE
+                ,GMT_CREATE
+                ,GMT_MODIFIED
+            )VALUES(
+
+                #{rfid,jdbcType=VARCHAR}
+                ,#{status,jdbcType=TINYINT}
+                ,#{deleted,jdbcType=BIT}
+                ,#{optUser,jdbcType=VARCHAR}
+                ,#{skuCode,jdbcType=VARCHAR}
+                ,#{itemCode,jdbcType=VARCHAR}
+                ,now()
+                ,now()
+            )
+        </operation>
+
+        <operation name="update" paramtype="object" remark="更新表:PRODUCT_SKU_RFID">
+            UPDATE PRODUCT_SKU_RFID
+            SET
+                    RFID            = #{rfid,jdbcType=VARCHAR}
+                    ,STATUS          = #{status,jdbcType=TINYINT}
+                    ,DELETED         = #{deleted,jdbcType=BIT}
+                    ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+                    ,SKU_CODE        = #{skuCode,jdbcType=VARCHAR}
+                    ,ITEM_CODE       = #{itemCode,jdbcType=VARCHAR}
+                    ,GMT_MODIFIED    = now()
+            WHERE
+                ID              = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:PRODUCT_SKU_RFID">
+            DELETE FROM PRODUCT_SKU_RFID
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:PRODUCT_SKU_RFID">
+            SELECT * FROM PRODUCT_SKU_RFID
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="updateStatusByRfid" multiplicity="one" remark="根据rfid更改状态">
+            UPDATE PRODUCT_SKU_RFID
+            SET
+            STATUS          = #{status,jdbcType=TINYINT}
+            ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+            ,GMT_MODIFIED    = now()
+            WHERE
+             RFID            = #{rfid,jdbcType=VARCHAR}
+        </operation>
+
+        <operation name="deleteRfidsBySkuCode" multiplicity="one" remark="根据skuCode删除">
+            UPDATE PRODUCT_SKU_RFID
+            SET
+             DELETED         = 1
+            ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+            ,SKU_CODE       = #{skuCode,jdbcType=VARCHAR}
+            ,GMT_MODIFIED    = now()
+            WHERE
+            SKU_CODE        = #{skuCode,jdbcType=VARCHAR}
+            AND OPT_USER        = #{optUser,jdbcType=VARCHAR}
+        </operation>
+
+        <operation name="insertForBatch" multiplicity="one" paramtype="object" remark="批量新增rfid">
+            INSERT INTO PRODUCT_SKU_RFID (
+             RFID
+            ,OPT_USER
+            ,SKU_CODE
+            ,ITEM_CODE
+            ,GMT_CREATE
+            ,GMT_MODIFIED)
+            VALUES
+            <foreach collection="rfidList" item="rfid" index="index" separator=",">
+                ( #{rfid,jdbcType=VARCHAR}
+                 ,#{optUser,jdbcType=VARCHAR}
+                 ,#{skuCode,jdbcType=VARCHAR}
+                 ,#{itemCode,jdbcType=VARCHAR}
+                 ,now()
+                 ,now())
+            </foreach>
+        </operation>
+
+        <operation name="updateRfidStatusForBatch" multiplicity="one" paramtype="primitive" remark="批量更新rfid状态">
+            UPDATE PRODUCT_SKU_RFID
+            SET
+            STATUS          = #{status,jdbcType=TINYINT}
+            ,GMT_MODIFIED    = now()
+            WHERE
+            RFID   IN  <foreach collection="rfids" index="index" item="rfid"
+                                separator="," open="(" close=")">
+            #{rfid,jdbcType=VARCHAR}
+            </foreach>
+        </operation>
+
+
+        <operation name="updateRfidUsed" multiplicity="one" paramtype="primitive" remark="更新rfid状态为已使用">
+            UPDATE PRODUCT_SKU_RFID
+            SET
+            STATUS          = 1
+            ,GMT_MODIFIED    = now()
+            WHERE
+            RFID  = #{rfid,jdbcType=VARCHAR}
+            AND STATUS = 0
+        </operation>
+
+       <operation name="querySkuRfidByRfids" multiplicity="many" remark="根据rfids批量查询rfid信息">
+           SELECT * FROM PRODUCT_SKU_RFID
+           WHERE
+           RFID IN
+           <foreach collection="list" item="rfid" index="index" open="(" close=")" separator=",">
+               #{rfid,jdbcType=VARCHAR}
+           </foreach>
+           AND DELETED = 0
+       </operation>
+
+       <operation name="querySkuRfidBySkuCode" multiplicity="many" remark="根据skuCode查询rfid信息">
+           SELECT * FROM PRODUCT_SKU_RFID
+           WHERE
+           SKU_CODE  =  #{skuCode,jdbcType=VARCHAR}
+           AND DELETED = 0
+           ORDER BY STATUS ASC, GMT_CREATE DESC
+       </operation>
+
+       <operation name="deleteRfidBySkuAndRfid" multiplicity="one" remark="根据sku和rfid删除rfid">
+           UPDATE PRODUCT_SKU_RFID
+           SET
+            DELETED         = 1
+           ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+           ,GMT_MODIFIED    = now()
+           WHERE
+           SKU_CODE   = #{skuCode,jdbcType=VARCHAR}
+           AND RFID = #{rfid,jdbcType=VARCHAR}
+           AND DELETED = 0
+       </operation>
+
+        <operation name="countRfidBySkuCode" multiplicity="one" remark="根据skucode查询rfid总数" resulttype="java.lang.Long">
+            SELECT COUNT(RFID) AS count FROM PRODUCT_SKU_RFID
+            WHERE SKU_CODE  = #{skuCode,jdbcType=VARCHAR}
+            AND STATUS = 0
+            AND DELETED = 0
+        </operation>
+
+        <resultmap name="SkuCodeCountResultMap" type="SkuCodeCountDO">
+            <column name="sku_code" javatype="String" jdbctype="VARCHAR" remark="商品编码"></column>
+            <column name="count" javatype="Long" jdbctype="BIGINT" remark="统计数量"></column>
+        </resultmap>
+
+        <operation name="countRfidBySkuCodes" multiplicity="many" remark="根据skuCode批量查询rfid总数" resultmap="SkuCodeCountResultMap">
+            SELECT SKU_CODE as sku_code, COUNT(rfid) AS count
+            FROM `PRODUCT_SKU_RFID`
+            WHERE
+            SKU_CODE IN
+            <foreach collection="list" item="skuCode" open="(" close=")" separator=",">
+                #{skuCode,jdbcType=VARCHAR}
+            </foreach>
+            AND STATUS = 0
+            AND DELETED = 0
+            GROUP BY SKU_CODE
+        </operation>
+</table>

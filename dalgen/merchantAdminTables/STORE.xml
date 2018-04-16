@@ -1,0 +1,150 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="STORE" physicalName="STORE" remark="STORE">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:STORE">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO STORE(
+
+        AREA
+        ,CITY
+        ,LOGO
+        ,ADDRESS
+        ,CONTACT
+        ,DELETED
+        ,PROVINCE
+        ,STORE_TEL
+        ,GMT_CREATE
+        ,STORE_CODE
+        ,STORE_DESC
+        ,STORE_NAME
+        ,MERCHANT_ID
+        ,GMT_MODIFIED
+        ,ONLINE_STATUS
+        ,CONTACT_MOBILE
+        )VALUES(
+
+        #{area,jdbcType=INTEGER}
+        ,#{city,jdbcType=INTEGER}
+        ,#{logo,jdbcType=VARCHAR}
+        ,#{address,jdbcType=VARCHAR}
+        ,#{contact,jdbcType=VARCHAR}
+        ,1
+        ,#{province,jdbcType=INTEGER}
+        ,#{storeTel,jdbcType=VARCHAR}
+        ,now()
+        ,#{storeCode,jdbcType=VARCHAR}
+        ,#{storeDesc,jdbcType=VARCHAR}
+        ,#{storeName,jdbcType=VARCHAR}
+        ,#{merchantId,jdbcType=VARCHAR}
+        ,now()
+        ,1
+        ,#{contactMobile,jdbcType=VARCHAR}
+        )
+    </operation>
+
+    <operation name="updatePartly" paramtype="object" remark="更新表:STORE">
+        UPDATE STORE
+        <set>
+            <if test="area != null">
+                AREA = #{area,jdbcType=INTEGER}
+            </if>
+            <if test="city != null">
+                ,CITY = #{city,jdbcType=INTEGER}
+            </if>
+            <if test="logo != null">
+                ,LOGO = #{logo,jdbcType=VARCHAR}
+            </if>
+            <if test="address != null">
+                ,ADDRESS = #{address,jdbcType=VARCHAR}
+            </if>
+            <if test="contact != null">
+                ,CONTACT = #{contact,jdbcType=VARCHAR}
+            </if>
+            <if test="deleted != null">
+                ,DELETED = #{deleted,jdbcType=VARCHAR}
+            </if>
+            <if test="province != null">
+                ,PROVINCE = #{province,jdbcType=VARCHAR}
+            </if>
+            <if test="storeTel != null">
+                ,STORE_TEL = #{storeTel,jdbcType=VARCHAR}
+            </if>
+            <if test="storeCode != null">
+                ,STORE_CODE = #{storeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="storeDesc != null">
+                ,STORE_DESC = #{storeDesc,jdbcType=VARCHAR}
+            </if>
+            <if test="storeName != null">
+                ,STORE_NAME = #{storeName,jdbcType=VARCHAR}
+            </if>
+            <if test="onlineStatus != null">
+                ,ONLINE_STATUS = #{onlineStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="contactMobile != null">
+                ,CONTACT_MOBILE = #{contactMobile,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="update" paramtype="object" remark="更新表:STORE">
+        UPDATE STORE
+        SET
+        AREA = #{area,jdbcType=INTEGER}
+        ,CITY = #{city,jdbcType=INTEGER}
+        ,LOGO = #{logo,jdbcType=VARCHAR}
+        ,ADDRESS = #{address,jdbcType=VARCHAR}
+        ,CONTACT = #{contact,jdbcType=VARCHAR}
+        ,DELETED = #{deleted,jdbcType=TINYINT}
+        ,PROVINCE = #{province,jdbcType=INTEGER}
+        ,STORE_TEL = #{storeTel,jdbcType=VARCHAR}
+        ,STORE_CODE = #{storeCode,jdbcType=VARCHAR}
+        ,STORE_DESC = #{storeDesc,jdbcType=VARCHAR}
+        ,STORE_NAME = #{storeName,jdbcType=VARCHAR}
+        ,BIZ_END_TIME = #{bizEndTime,jdbcType=VARCHAR}
+        ,MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+        ,GMT_MODIFIED = now()
+        ,BIZ_START_TIME = #{bizStartTime,jdbcType=VARCHAR}
+        ,ONLINE_STATUS = #{onlineStatus,jdbcType=TINYINT}
+        ,CONTACT_MOBILE = #{contactMobile,jdbcType=VARCHAR}
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="deleteByPrimary" multiplicity="one" remark="根据主键删除数据:STORE">
+        DELETE FROM STORE
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="getByCode" multiplicity="one" remark="根据code获取数据:STORE">
+        SELECT * FROM STORE
+        WHERE
+        STORE_CODE = #{storeCode,jdbcType=VARCHAR}
+    </operation>
+
+    <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:STORE">
+        SELECT * FROM STORE
+        WHERE
+        ID = #{id,jdbcType=INTEGER}
+    </operation>
+
+    <operation name="queryByMerchantId" multiplicity="many" remark="根据merchantId获取数据:STORE">
+        SELECT * FROM STORE
+        WHERE
+        MERCHANT_ID = #{merchantId,jdbcType=VARCHAR}
+        ORDER BY GMT_CREATE DESC
+    </operation>
+
+    <operation name="queryByStoreName" multiplicity="one" remark="根据门店名称获取数据:STORE">
+        SELECT * FROM STORE
+        WHERE
+        STORE_NAME = #{storeName,jdbcType=VARCHAR} limit 1
+    </operation>
+</table>

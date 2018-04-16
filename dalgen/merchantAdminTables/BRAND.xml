@@ -1,0 +1,57 @@
+<!DOCTYPE table SYSTEM "../config/table-config-1.0.dtd">
+<table sqlname="BRAND" physicalName="BRAND" remark="BRAND">
+    <!--  特殊字符说明  &lt;&gt;   <> -->
+
+    <operation name="insert" paramtype="object" remark="插入表:BRAND">
+            <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+                SELECT
+                LAST_INSERT_ID()
+            </selectKey>
+        INSERT INTO BRAND(
+            
+            LOGO
+            ,NAME
+            ,DELETED
+            ,OPT_USER
+            ,BRAND_CODE
+            ,GMT_CREATE
+            ,DESCRIPTION
+            ,ENGLISH_NAME
+            ,GMT_MODIFIED
+        )VALUES(
+            
+            #{logo,jdbcType=VARCHAR}
+            ,#{name,jdbcType=VARCHAR}
+            ,#{deleted,jdbcType=BIT}
+            ,#{optUser,jdbcType=VARCHAR}
+            ,#{brandCode,jdbcType=VARCHAR}
+            ,now()
+            ,#{description,jdbcType=VARCHAR}
+            ,#{englishName,jdbcType=VARCHAR}
+            ,now()
+        )
+    </operation>
+
+        <operation name="update" paramtype="object" remark="更新表:BRAND">
+            UPDATE BRAND
+            SET
+                    LOGO            = #{logo,jdbcType=VARCHAR}
+                    ,NAME            = #{name,jdbcType=VARCHAR}
+                    ,DELETED         = #{deleted,jdbcType=BIT}
+                    ,OPT_USER        = #{optUser,jdbcType=VARCHAR}
+                    ,BRAND_CODE      = #{brandCode,jdbcType=VARCHAR}
+                    ,DESCRIPTION     = #{description,jdbcType=VARCHAR}
+                    ,ENGLISH_NAME    = #{englishName,jdbcType=VARCHAR}
+                    ,GMT_MODIFIED    = now()
+            WHERE
+                ID              = #{id,jdbcType=INTEGER}
+        </operation>
+
+        <operation name="getByPrimary" multiplicity="one" remark="根据主键获取数据:BRAND">
+            SELECT * FROM BRAND
+            WHERE
+                ID = #{id,jdbcType=INTEGER}
+        </operation>
+
+
+</table>
